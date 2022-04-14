@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+.center-div {height: 100px; line-height: 100px;}
+
+.table {border: 1px solid; width: 1000px; height: 500px;   border-spacing: 10px; border-collapse: separate;}
+
+.singup-tr {border: 1px solid;}
+
+.mb-3 {margin-top: 20ox; margin-bottom: 20px;}

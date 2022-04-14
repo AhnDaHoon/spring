@@ -10,4 +10,10 @@ import com.topvel.user.model.User;
 public interface UserMapper {
 
 	List<User> getUser();
+	
+	boolean getId(String id);
+	
+	boolean insertUser(User user);
+	
+	String getUser(User user);
 }

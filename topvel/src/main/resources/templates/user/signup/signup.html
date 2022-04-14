@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<head>
+<meta charset="UTF-8">
+<title>Add CSS and JS to Thymeleaf</title>
+<link th:href="@{/css/contents.css}" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript">
+
+
+//비밀번호 검사 함수
+function passwordCheck(){
+	let password = document.getElementById("password").value;
+	let rePassword = document.getElementById("repassword").value;
+	
+
+	if(password === rePassword){
+    document.getElementById('passwordCheckMessages').innerHTML = '비밀번호가 일치합니다.';
+    document.getElementById('passwordCheckMessages').style.color = 'blue';
+	}else if(password !== rePassword){
+    document.getElementById('passwordCheckMessages').innerHTML = '비밀번호가 일치하지 않습니다.';
+    document.getElementById('passwordCheckMessages').style.color = 'red';
+	}
+}
+
+//아이디 중복확인 함수
+function fn_idCheck(){
+  var id = document.getElementById('id').value
+  if(id.trim().length == 0){
+		alert("아이디를 입력하세요.");
+	  return
+  }
+	const settings = {
+			"url": "/user/singupCheck/"+id,
+			"method": "GET",
+		};
+  
+	$.ajax(settings)
+	.done(function (response) {
+    document.getElementById('idSpan').innerHTML = response;
+    document.getElementById('idSpan').style.color = 'blue';
+	})
+	.fail(function(error) {
+    document.getElementById('idSpan').innerHTML = error.responseText;
+    document.getElementById('idSpan').style.color = 'red';
+	})	
+}
+
+
+function fn_idChangeCheck(){
+    document.getElementById('idSpan').innerHTML = "아이디 중복확인을 눌러주세요";
+    document.getElementById('idSpan').style.color = 'red';
+}
+
+function fn_save(){
+	// 이메일 유효성 검사
+	var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	var email = document.getElementById('email').value;
+	
+	if(confirm("회원가입 하시겠습니까?")){
+		if(email == '' || !re.test(email)) {
+			alert("올바른 이메일 주소를 입력하세요")
+			return false;
+		}else if(document.getElementById('idSpan').innerText  !== "사용 가능한 아이디입니다."){
+			alert("아이디 중복확인을 눌러주세요.")
+			return false;
+		}else if(document.getElementById('passwordCheckMessages').innerText !== "비밀번호가 일치합니다."){
+			alert("비밀번호를 확인해주세요.")
+			return false;
+		}
+	}
+	const formData = $("#inputForm").serialize();
+	console.log(formData);
+	const settings = {
+			"url": "/user/singup",
+			"method": "PUT",
+			"data": formData
+		};
+	
+	$.ajax(settings)
+	.done(function (response) {
+		alert(response);
+		window.location.href = '/user/login';
+	})
+	.fail(function(error) {
+		alert(error.responseText);
+
+	})	
+	
+}
+
+</script>
+</head>
+<title>Insert title here</title>
+<body>
+	<form action="" id="inputForm" name="inputForm">
+		<div>
+		  <div class="row mb-3">
+		    <label for="inputEmail3" class="col-sm-1 col-form-label">이름</label>
+		    <div class="col-sm-3">
+		      <input type="text" class="form-control" id="name" name="name">
+		    </div>
+		  </div>
+		  <div class="row mb-3">
+		    <label for="inputEmail3" class="col-sm-1 col-form-label">전화번호</label>
+		    <div class="col-sm-3">
+		      <input type="number" class="form-control" id="phone" name="phone">
+		    </div>
+		  </div>
+		  <div class="row mb-3">
+		    <label for="inputEmail3" class="col-sm-1 col-form-label">아이디</label>
+		    <div class="col-sm-3">
+		      <input type="text" class="form-control" id="id" name="id"  onchange="fn_idChangeCheck()">
+		      <span id="idSpan"> </span>
+		      <input type="button" value="중복확인" onclick="fn_idCheck();"/>
+		    </div>
+		  </div>
+		  <div class="row mb-3">
+		    <label for="inputEmail3" class="col-sm-1 col-form-label">닉네임</label>
+		    <div class="col-sm-3">
+		      <input type="text" class="form-control" id="nickname" name="nickname">
+		    </div>
+		  </div>
+		  <div class="row mb-3">
+		    <label for="inputPassword3" class="col-sm-1 col-form-label">비밀번호</label>
+		    <div class="col-sm-3">
+		      <input type="password" class="form-control" id="password" name="password" onchange="passwordCheck()" >
+		    </div>
+		  </div>
+		  <div class="row mb-3">
+		    <label for="inputPassword3" class="col-sm-1 col-form-label">비밀번호 확인</label>
+		    <div class="col-sm-3">
+		      <input type="password" class="form-control" id="repassword" name="repassword" onchange="passwordCheck()" >
+		      <span class="emplyrLb" id="passwordCheckMessages" style="position: relative;"></span>
+		    </div>
+		  </div>
+		  <div class="row mb-3">
+		    <label for="inputPassword3" class="col-sm-1 col-form-label">이메일</label>
+		    <div class="col-sm-3">
+		      <input type="email" class="form-control" id="email" name="email">
+		    </div>
+		  </div>
+		  <div class="row mb-3 col-form-label">
+			  <button type="button" onclick="fn_save();" class="btn btn-primary">회원가입</button>
+		  </div>
+		</div>
+	</form>
+</body>
+</html>
