@@ -1,0 +1,38 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+	<div th:if="${paginationInfo.totalRecordCount != 0}" th:fragment="paging" th:with="start=${paginationInfo.firstPageNoOnPageList}, last=${paginationInfo.lastPageNoOnPageList}" class="paginate">
+			<th:block th:if="${paginationInfo.currentPageNo == 1}" >
+				<img th:src="@{/img/first.png}" alt="처음">
+				<img th:src="@{/img/prev.png}" alt="이전">
+			</th:block>
+			<th:block th:if="${paginationInfo.currentPageNo != 1}" >
+	    <a th:href="'javascript:changePage(' + ${paginationInfo.currentPageNo} + ', 1)'" aria-label="pre-end" class="pre_end"><img th:src="@{/img/first.png}" alt="처음"></a>
+				<th:block th:if="${paginationInfo.currentPageNo - 10 >= 1}" >
+			    <a th:href="'javascript:changePage(' + ${paginationInfo.currentPageNo} + ', ' + ${paginationInfo.currentPageNo-10} + ')'" aria-label="pre" class="pre"><img th:src="@{/img/prev.png}" alt="이전"></a>
+		    </th:block>
+  				<th:block th:if="${paginationInfo.currentPageNo - 10 < 1}" >
+			    <a th:href="'javascript:changePage(' + ${paginationInfo.currentPageNo} + ', ' + ${paginationInfo.currentPageNo-1} + ')'" aria-label="pre" class="pre"><img th:src="@{/img/prev.png}" alt="이전"></a>
+		    </th:block>
+	    </th:block>
+	    
+	    <a th:each="page: ${#numbers.sequence(start, last)}" 
+	       th:href="'javascript:changePage(' + ${paginationInfo.currentPageNo} + ', ' + ${page} + ')'" 
+	       th:text="${page}" 
+	       th:class="${page == paginationInfo.currentPageNo} ? 'active'"></a>
+	    
+	    <th:block th:if="${paginationInfo.currentPageNo == paginationInfo.totalPageCount}" >     
+	    	<img th:src="@{/img/next.png}" alt="다음">
+	    	<img th:src="@{/img/last.png}" alt="마지막">
+			</th:block>
+			
+			<th:block th:if="${paginationInfo.currentPageNo != paginationInfo.totalPageCount}" >
+				<th:block th:if="${paginationInfo.totalPageCount - paginationInfo.currentPageNo >= 10}" >
+	    		<a th:href="'javascript:changePage(' + ${paginationInfo.currentPageNo} + ', ' + ${paginationInfo.currentPageNo+10} + ')'" aria-label="next" class="next"><img th:src="@{/img/next.png}"  alt="다음"></a>
+				</th:block>
+				<th:block th:if="${paginationInfo.totalPageCount - paginationInfo.currentPageNo < 10}" >
+	    		<a th:href="'javascript:changePage(' + ${paginationInfo.currentPageNo} + ', ' + ${paginationInfo.currentPageNo+1} + ')'" aria-label="next" class="next"><img th:src="@{/img/next.png}"  alt="다음"></a>
+				</th:block>
+	    	<a th:href="'javascript:changePage(' + ${paginationInfo.currentPageNo} + ', ' + ${paginationInfo.totalPageCount} + ')'" aria-label="next-end" class="next_end"><img th:src="@{/img/last.png}"  alt="마지막"></a>			
+			</th:block>
+	</div>
+</html>

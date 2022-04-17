@@ -4,10 +4,39 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.topvel.user.repository.UserMapper">
-	<select id="getUserList" resultType="com.topvel.user.model.User">
-		SELECT id, phone, name, nickname, password, email
-		FROM user
-	</select>
+	
+<!-- 	<select id="getUserList" parameterType="com.topvel.comment.model.Searchs" resultType="com.topvel.user.model.User"> -->
+<!-- 	SELECT * -->
+<!-- 	FROM( -->
+<!-- 			SELECT T0.*, FLOOR((ROWNUM - 1) / #{pageSize} + 1) PAGE -->
+<!-- 			FROM( -->
+<!-- 					SELECT id, phone, name, nickname, password, email, @ROWNUM:=@ROWNUM +1 AS ROWNUM -->
+<!-- 					FROM user, (SELECT @rownum:=0) RM -->
+<!-- 					WHERE 1 = 1 -->
+<!--   			 	<if test="searchWrd != null and !''.equals(searchWrd) and 'id'.equals(searchWrd)"> -->
+<!--   			 		AND id LIKE (#{searchWrd}) -->
+<!--   			 	</if> -->
+<!--   			 	<if test="searchWrd != null and !''.equals(searchWrd) and 'nickname'.equals(searchWrd)"> -->
+<!-- 						AND nickname = #{fundType} -->
+<!-- 				 	</if> -->
+<!-- 				 	ORDER BY ROWNUM  -->
+<!-- 				) T0 -->
+<!-- 			) Z -->
+<!-- 			WHERE PAGE = #{currentPageNo} -->
+<!-- 	</select> -->
+	
+<!--    <select id="getUserListCnt" parameterType="com.topvel.comment.model.Searchs" resultType="int"> -->
+<!--    	SELECT COUNT(*) -->
+<!--  	  FROM user -->
+<!--    	WHERE 1=1 -->
+<!-- 	 	<if test="searchWrd != null and !''.equals(searchWrd) and 'id'.equals(searchWrd)"> -->
+<!--  		AND id LIKE (#{searchWrd}) -->
+<!-- 	 	</if> -->
+<!-- 	 	<if test="searchWrd != null and !''.equals(searchWrd) and 'nickname'.equals(searchWrd)"> -->
+<!-- 		AND nickname = #{fundType} -->
+<!--  		</if> -->
+<!--    </select> -->
+
 	
 	<select id="getId" parameterType="String" resultType="boolean">
 	 SELECT COUNT(*)

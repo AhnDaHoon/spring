@@ -73,7 +73,7 @@ function fn_save(){
 	const formData = $("#inputForm").serialize();
 	console.log(formData);
 	const settings = {
-			"url": "/user/singup",
+			"url": "/user/signup",
 			"method": "PUT",
 			"data": formData
 		};
@@ -138,7 +138,7 @@ function fn_save(){
 		  <div class="row mb-3">
 		    <label for="inputPassword3" class="col-sm-1 col-form-label">이메일</label>
 		    <div class="col-sm-3">
-		      <input type="email" class="form-control" id="email" name="email">
+		      <input type="email" class="form-control" id="email" name="email" placeholder="이메일 형식에 맞춰야 합니다.">
 		    </div>
 		  </div>
 		  <div class="row mb-3 col-form-label">

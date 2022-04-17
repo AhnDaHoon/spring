@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.topvel.board.service.BoardService;
+import com.topvel.comment.model.PaginationInfo;
+import com.topvel.comment.model.Searchs;
 import com.topvel.user.model.User;
 import com.topvel.user.service.UserService;
 
@@ -23,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
+	private final BoardService boardService;
 
 	
 
@@ -44,7 +48,6 @@ public class UserController {
 	@PutMapping("/signup")
 	public ResponseEntity<?> singUp(User user){
 		System.out.println("asdasd" + user);
-
 		return userService.insertUser(user);
 	}
 	
@@ -76,9 +79,22 @@ public class UserController {
 	}
 	
 	@GetMapping("/move-main")
-	public String main(Model model, User user, HttpServletRequest request) {
+	public String main(Model model, User user, HttpServletRequest request, Searchs searchs) {
 		HttpSession session = request.getSession();
-		session.setAttribute("loginId", user.getId());
+		
+	    PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(searchs.getCurrentPageNo());
+	    paginationInfo.setTotalRecordCount(boardService.getboardListCnt(searchs));
+	    paginationInfo.setPageSize(searchs.getPageSize());
+	    paginationInfo.setRecordCountPerPage(searchs.getRecordCountPerPage());
+		
+	    session.setAttribute("loginId", user.getId());
+	    
+	    model.addAttribute("boardList", boardService.getboardList(searchs));
+	    model.addAttribute("listCnt", boardService.getboardListCnt(searchs));
+	    
+	  	model.addAttribute("searchs", searchs);
+	    model.addAttribute("paginationInfo", paginationInfo);
 		return "/main/main";
 	}
 	

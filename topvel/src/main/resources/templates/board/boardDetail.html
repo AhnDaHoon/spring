@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript">
+function deleteBoard(boardSeq){
+	if(confirm("게시판을 삭제하시겠습니까?")){
+		const settings = {
+				"url": "/main/board/"+boardSeq,
+				"method": "DELETE",
+			};
+		
+		$.ajax(settings)
+		.done(function (response) {
+			alert(response);
+			window.location.href = '/main/home';
+		})
+		.fail(function(error) {
+			alert(error.responseText);
+
+		})
+	}
+}
+
+function modifyBoard(boardSeq){
+	if(confirm("게시판을 수정하시겠습니까?")){
+		if(document.getElementById('title').value.trim().length == 0){
+			alert("제목을 입력하세요");
+			return;
+		}else if(document.getElementById('content').value.trim().length < 10){
+			alert("내용을 10자리 이상 입력하세요");
+			return;
+		}
+		const formData = $("#viewForm").serialize();
+		const settings = {
+				"url": "/main/board/",
+				"method": "PUT",
+				"data": formData
+			};
+		
+		$.ajax(settings)
+		.done(function (response) {
+			alert(response);
+			window.location.href = '/main/home';
+		})
+		.fail(function(error) {
+			alert(error.responseText);
+
+		})
+	}
+}
+</script>
+</head>
+<body>
+	<div class="center-div" style="margin-left: 300px;">
+		<form action="/main/boardInput" method="post" id="viewForm">
+			<div style="margin-left: 400px;">
+				<h1>게시판</h1>
+			</div>
+				<div th:replace="fragments/header :: header" ></div>
+				<p style="margin-left: 100px;" th:if="${not #strings.isEmpty(session.loginId)}" th:text="${session.loginId}+'님 환영합니다.'"></p>
+				
+				<th:block th:if="${not #strings.equals(session.loginId, board.id)}" >
+					<div class="mb-3" style="width: 400px;">
+					  <label for="exampleFormControlInput1" class="form-label">제목</label>
+					  <input type="text" class="form-control" id=title name="title" th:value="${board.title}" readonly="readonly">
+					</div>
+					<div class="mb-3">
+					  <label for="exampleFormControlTextarea1" class="form-label">내용</label>
+					  <textarea class="form-control" id="content" name="content" rows="20"  th:text="${board.content}" readonly="readonly"></textarea>
+				</th:block>
+				
+				<th:block th:if="${#strings.equals(session.loginId, board.id)}" >
+					<div class="mb-3" style="width: 400px;">
+					  <label for="exampleFormControlInput1" class="form-label">제목</label>
+					  <input type="text" class="form-control" id=title name="title" th:value="${board.title}">
+					</div>
+					<div class="mb-3">
+					  <label for="exampleFormControlTextarea1" class="form-label">내용</label>
+					  <textarea class="form-control" id="content" name="content" rows="20"  th:text="${board.content}" placeholder="10글자 이상 입력하세요."></textarea>
+						<button type="button" class="btn btn-danger" th:onclick="|deleteBoard(${board.boardSeq})|">삭제</button>
+						<button type="button" class="btn btn-success" th:onclick="modifyBoard()">수정</button>
+				</th:block>
+				
+				</div>
+				<input type="hidden" name="id" id="id" th:value="${board.id}" />
+				<input type="hidden" name="hits" id="hits" th:value="${board.hits}" />
+				<input type="hidden" name="boardSeq" id="boardSeq" th:value="${board.boardSeq}" />
+	  </form>
+	</div>
+</body>
+</html>

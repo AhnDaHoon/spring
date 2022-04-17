@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div th:fragment="header">
+	<th:block th:if="${#strings.isEmpty(session.loginId)}">
+		<div style="margin-left: 700px;">
+			<a th:href="@{/user/login}">로그인</a>
+			<a th:href="@{/user/signup}">회원가입</a>
+		</div>
+		
+	</th:block>
+	<th:block th:if="${not #strings.isEmpty(session.loginId)}">
+		<a href="/main/logout">로그아웃</a>
+	</th:block>
+	
+	<div style="margin-left: 400px;">
+		<a th:href="@{/main/home}">HOME</a>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+	<div th:if="${paginationInfo.totalRecordCount != 0}" th:fragment="pagination" th:with="start=${paginationInfo.firstPageNoOnPageList}, last=${paginationInfo.lastPageNoOnPageList}" class="paginate">
+	    <a th:href="@{__${#httpServletRequest.requestURI}__(currentPageNo=${start}, searchType=${searchCd.searchType}, searchWrd=${searchCd.searchWrd})}" aria-label="pre-end" class="pre_end"><img th:src="@{/images/ico_first.png}" alt="처음"></a>
+	    <a th:href="${paginationInfo.currentPageNo == 1} ? '#' :@{__${#httpServletRequest.requestURI}__(currentPageNo=${paginationInfo.currentPageNo - 1}, searchType=${searchCd.searchType}, searchWrd=${searchCd.searchWrd})}" aria-label="pre" class="pre"><img th:src="@{/images/ico_prev.png}" alt="이전"></a>
+	    
+	    <a th:each="page: ${#numbers.sequence(start, last)}" 
+	       th:href="@{__${#httpServletRequest.requestURI}__(currentPageNo=${page}, searchType=${searchCd.searchType}, searchWrd=${searchCd.searchWrd})}" 
+	       th:text="${page}" 
+	       th:class="${page == paginationInfo.currentPageNo} ? 'active'"></a>
+	       
+	    <a th:href="${paginationInfo.currentPageNo == paginationInfo.lastPageNoOnPageList} ? '#' : @{__${#httpServletRequest.requestURI}__(currentPageNo=${paginationInfo.currentPageNo + 1}, searchType=${searchCd.searchType}, searchWrd=${searchCd.searchWrd})}" aria-label="next" class="next"><img th:src="@{/images/ico_next.png}" alt="다음"></a>
+	    <a th:href="@{__${#httpServletRequest.requestURI}__(currentPageNo=${last}, searchType=${searchCd.searchType}, searchWrd=${searchCd.searchWrd})}" aria-label="next-end" class="next_end"><img th:src="@{/images/ico_end.png}" alt="마지막"></a>
+	</div>
+</body>
+</html>
+
+
+<!-- <html xmlns="http://www.w3.org/1999/xhtml"  -->
+<!--       xmlns:th="http://www.thymeleaf.org" -->
+<!--       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"> -->
+<!-- <body> -->
+<!-- 	<div th:if="${paginationInfo.totalRecordCount != 0}" th:fragment="pagination" th:with="start=${paginationInfo.firstPageNoOnPageList}, last=${paginationInfo.lastPageNoOnPageList}" class="paginate"> -->
+<!-- 	    <a th:href="@{__${#httpServletRequest.requestURI}__(currentPageNo=${start}, searchType=${searchs.searchType}, searchWrd=${searchs.searchWrd})}" aria-label="pre-end" class="pre_end"><img th:src="@{/images/ico_first.png}" alt="처음"></a> -->
+<!-- 	    <a th:href="${paginationInfo.currentPageNo == 1} ? '#' :@{__${#httpServletRequest.requestURI}__(currentPageNo=${paginationInfo.currentPageNo - 1}, searchType=${searchs.searchType}, searchWrd=${searchs.searchWrd})}" aria-label="pre" class="pre"><img th:src="@{/images/ico_prev.png}" alt="이전"></a> -->
+	    
+<!-- 	    <a th:each="page: ${#numbers.sequence(start, last)}"  -->
+<!-- 	       th:href="@{__${#httpServletRequest.requestURI}__(currentPageNo=${page}, searchType=${searchs.searchType}, searchWrd=${searchs.searchWrd})}"  -->
+<!-- 	       th:text="${page}"  -->
+<!-- 	       th:class="${page == paginationInfo.currentPageNo} ? 'active'"></a> -->
+	       
+<!-- 	    <a th:href="${paginationInfo.currentPageNo == paginationInfo.lastPageNoOnPageList} ? '#' : @{__${#httpServletRequest.requestURI}__(currentPageNo=${paginationInfo.currentPageNo + 1}, searchType=${searchs.searchType}, searchWrd=${searchs.searchWrd})}" aria-label="next" class="next"><img th:src="@{/images/ico_next.png}" alt="다음"></a> -->
+<!-- 	    <a th:href="@{__${#httpServletRequest.requestURI}__(currentPageNo=${last}, searchType=${searchs.searchType}, searchWrd=${searchs.searchWrd})}" aria-label="next-end" class="next_end"><img th:src="@{/images/ico_end.png}" alt="마지막"></a> -->
+<!-- 	</div> -->
+<!-- </body> -->
+<!-- </html> -->

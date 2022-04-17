@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.topvel.comment.model.Searchs;
 import com.topvel.user.model.User;
 import com.topvel.user.repository.UserMapper;
 
@@ -18,11 +19,16 @@ public class UserServiceimpl implements UserService{
 	
 	private final UserMapper userMapper;
 
-	@Override
-	public List<User> getUser() {
-		return userMapper.getUser();
-	}
-
+//	@Override
+//	public List<User> getUserList(Searchs searchs) {
+//		return userMapper.getUserList(searchs);
+//	}
+//
+//	@Override
+//	public int getUserListCnt(Searchs searchs) {
+//		return userMapper.getUserListCnt(searchs);
+//	}
+	
 	@Override
 	public ResponseEntity<?> getId(String id) {
 		if(!ObjectUtils.isEmpty(id)) {
@@ -38,6 +44,7 @@ public class UserServiceimpl implements UserService{
 
 	@Override
 	public ResponseEntity<?> insertUser(User user) {
+		System.out.println("asdasd" + user);
 		if(!ObjectUtils.isEmpty(user)) {
 			if(userMapper.insertUser(user)) {
 				return new ResponseEntity<>("회원가입 되었습니다.", HttpStatus.OK);
@@ -53,5 +60,7 @@ public class UserServiceimpl implements UserService{
 		}
 		return null;
 	}
+
+
 
 }

@@ -4,66 +4,88 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript">
+function changePage(current, pageNumber) {
+	document.getElementById("currentPageNo").value = pageNumber;
+	
+	var form = document.getElementById('searchForm');
+	form.action = "/main/home";
+	form.method = "GET";
+	form.submit();
+}
+
+function moveBoardDetail(boardSeq){
+	var form = document.getElementById('searchForm');
+	form.action = "/main/board/"+boardSeq;
+	form.method = "GET";
+	form.submit();
+}
+
+function moveBoardInput(){
+	var form = document.getElementById('searchForm');
+	form.action = "/main/boardInput";
+	form.method = "GET";
+	form.submit();
+}
+
+</script>
 </head>
 <body>
 	<div class="center-div" style="margin-left: 300px;">
-		<div style="margin-left: 400px;">
-			<h1>Main</h1>
-		</div>
-		<div style="margin-left: 700px;">
-			<a th:href="@{/user/login}">로그인</a>
-			<a th:href="@{/user/signup}">회원가입</a>
-		</div>
-			<p style="margin-left: 100px;" th:if="${not #strings.isEmpty(session.loginId)}" th:text="${session.loginId}+'님 환영합니다.'"></p>
-	 	<div>
-	 		<select>
-	 			<option value='id'>아이디</option>
-	 			<option value='nickname'>닉네임</option>
-	 		</select>
-	 		<input type="text" name="" id="" style="width: 200px;"/>
-	 	</div>
-	 	<div style="width: 1000px;">
-			<table class="table">
-			  <thead>
-			    <tr>
-			      <th scope="col"><input type="checkbox" name="xxx" value="yyy"></th>
-			      <th scope="col">no</th>
-			      <th scope="col">제목</th>
-			      <th scope="col">닉네임</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <td><input type="checkbox" name="xxx" value="yyy"></td>
-			      <td>Mark</td>
-			      <td>Mark</td>
-			      <td>Mark</td>
-			    </tr>
-			    <tr>
-			      <td><input type="checkbox" name="xxx" value="yyy"></td>
-			      <td>Mark</td>
-			      <td>Mark</td>
-			      <td>Mark</td>
-			    </tr>
-			  </tbody>
-			</table>
-	 	</div>
-	 	<div>
-	 		<button type="button" class="btn btn-danger" style="margin-left: 700px;">삭제하기</button>
-	 	</div>
-		<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-left: 300px;">
-		 <div class="btn-group me-2" role="group" aria-label="First group">
-		    <button type="button" class="btn btn-primary"><<</button>
-		    <button type="button" class="btn btn-primary"><</button>
-		    <button type="button" class="btn btn-primary">1</button>
-		    <button type="button" class="btn btn-primary">2</button>
-		    <button type="button" class="btn btn-primary">3</button>
-		    <button type="button" class="btn btn-primary">4</button>
-		    <button type="button" class="btn btn-primary">></button>
-		    <button type="button" class="btn btn-primary">>></button>
+		<form action="" id="searchForm">
+			<div style="margin-left: 400px;">
+				<h1>Main</h1>
+			</div>
+				<div th:replace="fragments/header :: header" ></div>
+				<p style="margin-left: 100px;" th:if="${not #strings.isEmpty(session.loginId)}" th:text="${session.loginId}+'님 환영합니다.'"></p>
+		 	<div>
+		 		<select name="searchType" id="searchType">
+		 			<option value='title' th:selected="${#strings.equals(searchs.searchType, 'title')}">제목</option>
+		 			<option value='id' th:selected="${#strings.equals(searchs.searchType, 'id')}">아이디</option>
+		 		</select>
+		 		<input type="text" name="searchWrd" id="searchWrd" th:value="${searchs.searchWrd}" style="width: 200px;"/>
+		 		<input type="button" value="검색" onclick="changePage(1,1)"/>
+		 	</div>
+		 	<div style="width: 1000px;">
+				<table class="table">
+				  <thead>
+				    <tr>
+				      <th scope="col">no</th>
+				      <th scope="col">제목</th>
+				      <th scope="col">ID</th>
+				      <th scope="col">조회수</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+						<th:block th:if="${paginationInfo.totalRecordCount != 0}">
+						<tr th:each="board : ${boardList}">
+							<td th:text="${board.boardSeq}"></td>
+							<td th:text="${board.title}" style="cursor: pointer; color: #8ACEFF" th:onclick="|moveBoardDetail(${board.boardSeq})|"></td>
+							<td th:text="${board.id}"></td>
+							<td th:text="${board.hits}"></td>
+						</tr>
+						</th:block>
+						<!--게시물 없을때-->
+						<th:block th:unless="${paginationInfo.totalRecordCount != 0}">
+							<td colspan="8">등록된 게시판 없습니다.</td>
+						</th:block>
+				  </tbody>
+				</table>
+		 	</div>
+		 	<div>
+		 	</div>
+			<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-left: 300px;">
+			 <div class="btn-group me-2" role="group" aria-label="First group">
+					<div th:replace="fragments/paging :: paging" >
+					</div>
+					<div style="margin-left: 500px;">
+						<button type="button" th:if="${not #strings.isEmpty(session.loginId)}" class="btn btn-primary" onclick="moveBoardInput();">새 글 쓰기</button>
+					</div>
+			  </div>
 		  </div>
-	  </div>
-	  
+		  <input type="hidden" id="currentPageNo" name="currentPageNo" th:value="${paginationInfo.currentPageNo}"/>
+	  </form>
 	</div>
 </body>
 </html>

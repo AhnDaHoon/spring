@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.topvel.board.repository.BoardMapper">
+	
+	<select id="getboardList" parameterType="com.topvel.comment.model.Searchs" resultType="com.topvel.board.model.Board">
+	SELECT *
+	FROM(
+			SELECT T0.*, FLOOR((ROWNUM - 1) / #{pageSize} + 1) PAGE
+			FROM(
+					SELECT board_seq, id, hits, title, content, @ROWNUM:=@ROWNUM +1 AS ROWNUM
+					FROM board, (SELECT @rownum:=0) RM
+					WHERE 1 = 1
+  			 	<if test="searchWrd != null and !''.equals(searchWrd) and 'title'.equals(searchType)">
+  			 		AND title LIKE CONCAT('%', #{searchWrd}, '%')
+  			 	</if>
+	  			 	<if test="searchWrd != null and !''.equals(searchWrd) and 'id'.equals(searchType)">
+  			 		AND id LIKE CONCAT('%', #{searchWrd}, '%')
+  			 	</if>
+				 	ORDER BY board_seq 
+				) T0
+			) Z
+			WHERE PAGE = #{currentPageNo}
+	</select>
+	
+   <select id="getboardListCnt" parameterType="com.topvel.comment.model.Searchs" resultType="int">
+   	SELECT COUNT(*)
+ 	  FROM board
+   	WHERE 1=1
+	 	<if test="searchWrd != null and !''.equals(searchWrd) and 'title'.equals(searchWrd)">
+	 		AND id title (#{searchWrd})
+	 	</if>
+   </select>
+
+	<insert id="inserBoard" parameterType="com.topvel.board.model.Board">
+		INSERT INTO board (board_seq, id, hits, title, content)
+		VALUES(#{boardSeq}, #{id}, #{hits}, #{title}, #{content})
+	</insert>
+	
+	<select id="getBoardSeq" resultType="int">
+		SELECT MAX(board_seq)+1
+		FROM board 
+		ORDER BY board_seq desc;
+	</select>
+	
+	<select id="getBoard" parameterType="int" resultType="com.topvel.board.model.Board">
+		SELECT board_seq, id, hits, title, content
+		FROM board
+		WHERE board_seq = #{boardSeq}
+	</select>
+	
+	<delete id="deleteBoard" parameterType="int">
+		DELETE FROM board
+		WHERE board_seq = #{boardSeq}
+	</delete>
+	
+	<update id="modifyBoard" parameterType="com.topvel.board.model.Board">
+		UPDATE board
+		SET title = #{title}, content = #{content}
+		WHERE board_seq = #{boardSeq}
+	</update>
+	
+	<update id="hitsUp" parameterType="int">
+		UPDATE board
+		SET hits = hits + 1
+		WHERE board_seq = #{boardSeq}
+	</update>
+</mapper>
